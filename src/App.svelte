@@ -1,6 +1,7 @@
 <script>
 	import { Client } from "rpc-websockets";
 	import States from "./states.ts";
+	import Thing from "./Thing.svelte";
 
 	const RPC_WS_SERVER = "ws://seed1.nimiq.local:8648/ws";
 
@@ -10,8 +11,15 @@
 	let state = States.CONNECTING;
 	socket.on("open", () => {
 		state = States.CONNECTED;
-		setTimeout(() => socket.call("getTransactionsByHash", ["67b4023a6cc840acaa5b269201479ee46e1678a7ef81604e735a3477b0de2d1e"]).then(num => console.log("num", num)), 1000);
+		setTimeout(() => socket.call("blockNumber", {}, 1000, {binary: true}).then(num => console.log("num", num)), 1000);
 	});
+
+	function nameState(state) {
+		if (state === States.CONNECTING) return "Connecting...";
+		if (state === States.CONNECTED) return "Connected";
+	}
+
+	let search = "";
 </script>
 
 <style>
@@ -46,13 +54,14 @@
 </style>
 
 <nav class="nq-gold-bg">
-	<h1>Albawatch</h1>
+	<h1 class="nq-h1">Albawatch</h1>
 	<span class="conn-state">
-		{state.toString()}
+		{nameState(state)}
 	</span>
 </nav>
 <main>
 	<div class="content">
-		<input type="text" id="search-input" placeholder="Search accounts, blocks, and transactions">
+		<input type="text" id="search-input" placeholder="Search accounts, blocks, and transactions" bind:value={search}>
+		<Thing {search} />
 	</div>
 </main>
