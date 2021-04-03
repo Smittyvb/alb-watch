@@ -1,4 +1,6 @@
 <script>
+	import Block from "./Block.svelte";
+	
 	export let search;
 
 	const TYPES = {
@@ -29,4 +31,10 @@
 	$: parsed = parse(search);
 </script>
 
-{parsed}
+{#if parsed === "block"}
+	<Block num={parseInt(search, 10)} />
+{:else if parsed === "homepage"}
+	Welcome to this block explorer!
+{:else}
+unreachable
+{/if}

@@ -58,7 +58,7 @@
 			});
 		}
 		socket.send(JSON.stringify({
-			jsonrpc: "2.0", method: "getBlockNumber", params: [], id: ++rpcId,
+			jsonrpc: "2.0", method, params, id: ++rpcId,
 		}));
 		return new Promise((resolve, reject) => {
 			idCallbacks[rpcId] = {
@@ -67,6 +67,7 @@
 			};
 		});
 	}
+	window.call = call;
 
 	(async () => {
 		console.log("bn", await call("getBlockNumber", []))
