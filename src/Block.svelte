@@ -43,13 +43,18 @@
 	{#if block}
 		<div class="nq-card">
 			<div class="nq-card-header">
-				<h2 class="nq-h2">{block.blockType} block</h2>
+				<h2 class="nq-h2">{#if block.is_election_block}election {/if}{block.blockType} block #{#if block.blockType === "micro"}{block.blockNumber}{:else}{block.epoch}{/if}</h2>
 				<div class="nq-notice">
 					<div>
 						at {(new Date(block.timestamp)).toLocaleString()}
+						{#if block.blockType === "macro"}
+							with {block.justification.sig.signers.length} signers ({(block.justification.sig.signers.length / 512 * 100).toFixed(2)}%)
+						{/if}
 					</div>
 					<div>
-						micro #{block.blockNumber}, macro #{block.epoch}
+						{#if block.blockType === "micro"}
+							Part of epoch #{block.epoch}
+						{/if}
 					</div>
 				</div>
 			</div>
@@ -83,41 +88,56 @@
 						<span class="label">VRF seed</span>
 						<span class="value">{block.seed}</span>
 					</div>
-					<div>
-						<span class="label">Justification</span>
-						<span class="value">{block.seed}</span>
-					</div>
-					<div>
-						<span class="label">View change justification</span>
-						<span class="value">
-							{#if block.justification.viewChangeProof}
-								{block.justification.viewChangeProof}
-							{:else}
-								N/A
-							{/if}
-						</span>
-					</div>
-					<div>
-						<span class="label">Validator slot</span>
-						<span class="value">{block.producer.slotNumber}</span>
-					</div>
-					<div>
-						<span class="label">Validator ID</span>
-						<span class="value">{block.producer.validatorId}</span>
-					</div>
-					<div>
-						<span class="label">Validator public key</span>
-						<span class="value">{block.producer.publicKey}</span>
-					</div>
+					{#if block.blockType === "micro"}
+						<div>
+							<span class="label">Justification</span>
+							<span class="value">{block.seed}</span>
+						</div>
+						<div>
+							<span class="label">View change justification</span>
+							<span class="value">
+								{#if block.justification.viewChangeProof}
+									{block.justification.viewChangeProof}
+								{:else}
+									N/A
+								{/if}
+							</span>
+						</div>
+						<div>
+							<span class="label">Validator slot</span>
+							<span class="value">{block.producer.slotNumber}</span>
+						</div>
+						<div>
+							<span class="label">Validator ID</span>
+							<span class="value">{block.producer.validatorId}</span>
+						</div>
+						<div>
+							<span class="label">Validator public key</span>
+							<span class="value">{block.producer.publicKey}</span>
+						</div>
+					{:else}
+						<div>
+							<span class="label">Signature</span>
+							<span class="value">{block.justification.sig.signature}</span>
+						</div>
+					{/if}
 				</div>
-				{#if block.fork_proofs.length > 0}
+				{#if block.fork_proofs && block.fork_proofs.length > 0}
 					<div>
 						There were fork proofs this block!
 					</div>
 				{/if}
+				{#if block.blockType === "macro"}
+					Scheudled slots: TODO
+					Lost rewards: TODO
+				{/if}
 				<div>
-					<h3 class="nq-h3">{block.transactions.length} transcations</h3>
-					TODO
+					{#if block.transactions}
+						<h3 class="nq-h3">{block.transactions.length} transcations</h3>
+						TODO
+					{:else}
+						No transactions in macro blocks.
+					{/if}
 				</div>
 			</div>
 		</div>
