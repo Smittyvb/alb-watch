@@ -1,4 +1,6 @@
 <script>
+	import Tx from "./Tx.svelte";
+
 	export let num;
 
 	let dataP;
@@ -134,7 +136,9 @@
 				<div>
 					{#if block.transactions}
 						<h3 class="nq-h3">{block.transactions.length} transcations</h3>
-						TODO
+						{#each block.transactions as tx}
+							<Tx data={tx} />
+						{/each}
 					{:else}
 						No transactions in macro blocks.
 					{/if}
