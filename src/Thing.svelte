@@ -36,5 +36,5 @@
 {:else if parsed === "homepage"}
 	Welcome to this block explorer!
 {:else}
-unreachable
+	Couldn't parse query.
 {/if}
