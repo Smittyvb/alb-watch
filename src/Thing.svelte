@@ -1,5 +1,6 @@
 <script>
 	import Block from "./Block.svelte";
+	import Address from "./Address.svelte";
 	
 	export let search;
 
@@ -10,7 +11,7 @@
 		block: {
 			regex: /^\s*\d{1,15}\s*$/
 		},
-		tx: {
+		hash: {
 			regex: /^\s*[a-fA-F0-9]{64}\s*$/,
 		},
 		homepage: {
@@ -35,6 +36,8 @@
 	<Block num={parseInt(search, 10)} />
 {:else if parsed === "homepage"}
 	Welcome to this block explorer!
+{:else if parsed === "addr"}
+	<Address addr={search} />
 {:else}
 	Couldn't parse query.
 {/if}
